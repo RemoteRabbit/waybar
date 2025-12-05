@@ -1,66 +1,118 @@
 {
   "reload_style_on_change": true,
-	"modules-left": ["custom/launcher","cpu","memory","custom/media"],
-	"modules-center": ["hyprland/workspaces"],
-	"modules-right": ["pulseaudio","network","clock","tray"],
+  "modules-left": ["cpu", "temperature", "memory", "disk", "custom/media"],
+  "modules-center": ["hyprland/workspaces"],
+  "modules-right": ["pulseaudio", "network", "clock", "tray"],
 
   "hyprland/workspaces": {
-    "persistent-workspaces": {
-      "DP-1": [1,2,3,4,5],
-      "DP-2": [6,7,8,9,0],
+    "format": "{icon}",
+    "on-click": "activate",
+    "format-icons": {
+      "urgent": "●",
+      "active": "●",
+      "visible": "●",
+      "default": "●",
+      "empty": "○"
+    },
+    "all-outputs": false
+  },
+
+  "pulseaudio": {
+    "tooltip": true,
+    "tooltip-format": "{icon} {volume}% {desc}",
+    "scroll-step": 5,
+    "format": "{icon} {volume}%",
+    "format-muted": " {volume}%",
+    "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-click-right": "pavucontrol",
+    "format-icons": {
+      "default": ["", "", ""]
     }
-
   },
 
-	"pulseaudio": {
-		"tooltip": false,
-		"scroll-step": 5,
-		"format": "{icon} {volume}%",
-		"format-muted": "{icon} {volume}%",
-		"on-click":"pactl set-sink-mute @DEFAULT_SINK@ toggle",
-		"format-icons": {
-			"default": ["", "", ""]
-		}
-	},
+  "network": {
+    "tooltip": true,
+    "tooltip-format-wifi": "  {essid} ({signalStrength}%)\n  {ipaddr}/{cidr}",
+    "tooltip-format-ethernet": "  {ipaddr}/{cidr}",
+    "format-wifi": "  {essid}",
+    "format-ethernet": "",
+    "format-disconnected": "  Offline",
+    "on-click-right": "nm-connection-editor"
+  },
 
-	"network": {
-		"tooltip": false,
-		"format-wifi": "  {essid}",
-		"format-ethernet": ""
-	},
-	"tray":{
-		"icon-size":18,
-		"spacing": 10
-	},
+  "tray": {
+    "icon-size": 18,
+    "spacing": 10
+  },
+
   "clock": {
-    "format": "{:%I:%M %p  %d/%m/%Y}"
+    "format": "{:%I:%M %p  %d/%m/%Y}",
+    "tooltip": true,
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "format": {
+        "today": "<span color='#F28FAD'><b>{}</b></span>"
+      }
+    },
+    "on-click-right": "gnome-calendar"
   },
+
   "cpu": {
-      "interval": 15,
-      "format": " {}%",
-      "max-length": 10
+    "interval": 5,
+    "format": " {usage}%",
+    "format-icons": [""],
+    "max-length": 10,
+    "tooltip": true,
+    "on-click": "gnome-system-monitor",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    }
   },
+
+  "temperature": {
+    "interval": 10,
+    "thermal-zone": 0,
+    "format": " {temperatureC}°C",
+    "format-critical": " {temperatureC}°C",
+    "critical-threshold": 80,
+    "tooltip": true
+  },
+
   "memory": {
-      "interval": 30,
-      "format": " {}%",
-      "max-length": 10
+    "interval": 10,
+    "format": " {percentage}%",
+    "format-icons": [""],
+    "max-length": 10,
+    "tooltip": true,
+    "tooltip-format": "  {used:0.1f}GB / {total:0.1f}GB",
+    "on-click": "gnome-system-monitor",
+    "states": {
+      "warning": 70,
+      "critical": 90
+    }
   },
+
+  "disk": {
+    "interval": 30,
+    "format": " {percentage_used}%",
+    "path": "/",
+    "tooltip": true,
+    "tooltip-format": "{used} / {total} used"
+  },
+
   "custom/media": {
-      "interval": 30,
-      "format": "{icon} {}",
-      "return-type": "json",
-      "max-length": 20,
-      "format-icons": {
-          "spotify": " ",
-          "default": " "
-      },
-      "escape": true,
-      "exec": "$HOME/.config/system_scripts/mediaplayer.py 2> /dev/null",
-      "on-click": "playerctl play-pause"
-  },
-  "custom/launcher":{
-      "format": " ",
-      "on-click": "walker --modules applications",
-      "on-click-right": "killall walker"
+    "interval": 5,
+    "format": "{icon} {}",
+    "return-type": "json",
+    "max-length": 20,
+    "format-icons": {
+      "spotify": " ",
+      "default": " "
+    },
+    "escape": true,
+    "exec": "$HOME/.config/system_scripts/mediaplayer.py 2> /dev/null",
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next"
   }
 }
